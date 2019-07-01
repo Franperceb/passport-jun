@@ -57,8 +57,8 @@ passport.use(
           slackID: profile.id
         })
         done(null, newUser)
-      } catch (err) {
-        return done(err)
+      } catch (error) {
+        return done(error)
       }
     }
   )
