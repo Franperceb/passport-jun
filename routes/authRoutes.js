@@ -4,7 +4,8 @@ const passport = require('../middlewares/passport')
 const {
   getSignup,
   postSignup,
-  getLogin
+  getLogin,
+  logout
 } = require('../controllers/authControllers')
 
 router.get('/signup', getSignup)
@@ -17,6 +18,15 @@ router.post(
     failureRedirect: '/auth/login',
     passReqToCallback: true,
     failureFlash: true
+  })
+)
+router.get('/logout', logout)
+router.get('/slack', passport.authenticate('slack'))
+router.get(
+  '/slack/callback',
+  passport.authenticate('slack', {
+    successRedirect: '/private-page',
+    failureRedirect: '/auth/login'
   })
 )
 

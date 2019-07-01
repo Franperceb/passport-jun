@@ -11,6 +11,7 @@ const path = require('path')
 const session = require('express-session')
 const connectMongo = require('connect-mongo')(session)
 const passport = require('./middlewares/passport')
+const flash = require('connect-flash')
 
 mongoose
   .connect(process.env.DB, {useNewUrlParser: true})
@@ -46,7 +47,7 @@ app.use(
 )
 app.use(passport.initialize())
 app.use(passport.session())
-
+app.use(flash())
 // Express View engine setup
 
 app.use(

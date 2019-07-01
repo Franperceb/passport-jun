@@ -2,6 +2,7 @@ const passport = require('passport')
 const User = require('../models/User')
 const {compareSync} = require('bcrypt')
 const localStrategy = require('passport-local').Strategy
+const slackStrategy = require('passport-slack').Strategy
 
 passport.serializeUser((user, cb) => {
   // recibe el usuario que se logueo y se apoya del id para manejar la sesion
@@ -36,6 +37,31 @@ passport.use(
       next(error)
     }
   })
+)
+
+passport.use(
+  new slackStrategy(
+    {
+      clientID: process.env.SLACK_ID,
+      clientSecret: process.env.SLACK_SECRET
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        console.log(profile)
+        const user = await User.findOne({slackID: profile.id})
+        if (user) {
+          return done(null, user)
+        }
+        const newUser = await User.create({
+          username: profile.displayName,
+          slackID: profile.id
+        })
+        done(null, newUser)
+      } catch (err) {
+        return done(err)
+      }
+    }
+  )
 )
 
 module.exports = passport

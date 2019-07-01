@@ -26,5 +26,11 @@ exports.postSignup = async (req, res) => {
 }
 
 exports.getLogin = (req, res) => {
-  res.render('auth/login')
+  res.render('auth/login', {
+    message: req.flash('error')
+  })
+}
+exports.logout = (req, res) => {
+  req.logout()
+  res.redirect('/auth/login')
 }
